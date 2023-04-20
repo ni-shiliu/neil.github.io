@@ -26,5 +26,6 @@ gem "http_parser.rb", "~> 0.6.0", :platforms => [:jruby]
 if RUBY_PLATFORM =~ /linux-musl/
   gem "jekyll-sass-converter", "~> 2.0"
 
-bundle lock --add-platform x86_64-linux
+bundle "lock --add-platform ruby"
+bundle "lock --add-platform x86_64-linux"
 end
