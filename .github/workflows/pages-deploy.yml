@@ -4,6 +4,7 @@ on:
     branches:
       - main
       - master
+      - feature
     paths-ignore:
       - .gitignore
       - README.md
