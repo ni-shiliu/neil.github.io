@@ -1,6 +1,6 @@
 ---
-title: Hello word
-date: 2023-04-19 08:08:08 +/-TTTT
+title: 观察者模式（Observer）
+date: 2023-05-22 08:08:08 +/-TTTT
 categories: [目录, 设计模式]
 tags: [TAG]     # TAG names should always be lowercase
 author: Neil
