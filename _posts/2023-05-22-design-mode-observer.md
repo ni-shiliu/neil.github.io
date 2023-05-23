@@ -149,6 +149,6 @@ public class WeatherStation {
 ## jdk内置观察者模式
 
 
-> 代码下载地址:<https://github.com/ni-shiliu/neil-design-mode> 
+> 代码下载地址：<https://github.com/ni-shiliu/neil-design-mode> 
 {: .prompt-tip }
 
