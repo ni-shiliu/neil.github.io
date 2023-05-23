@@ -14,11 +14,11 @@ author: Neil
 1. 建立一个气象站，该气象站必须建立在甲方专利申请中的WeatherData上，有三个布告板，分别显示目前状况，三种布告板必须实时更新；
 2. 这个气象站必须可扩展，希望能够提供一组API，让其他开发写出自己的布告板。
 
-![模型图](../_data/images/observer-mode.png)
+![模型图](../img/observer/mode.png)
 
 ## 类图
 
-![类图](../_data/images/observer-diagram.png)
+![类图](../img/observer/diagram.png)
 
 ## 实现
 
