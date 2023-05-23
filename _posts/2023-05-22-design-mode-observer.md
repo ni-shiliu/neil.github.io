@@ -145,3 +145,10 @@ public class WeatherStation {
 > 思考:  
 > 1. 如果数值变化超过1度才会通知观察者，该怎么实现
 > 2. 如果我不想什么都让WeatherData push给我，我想自己pull信息，该怎么实现
+
+## jdk内置观察者模式
+
+
+> 代码下载地址:<https://github.com/ni-shiliu/neil-design-mode> 
+{: .prompt-tip }
+
