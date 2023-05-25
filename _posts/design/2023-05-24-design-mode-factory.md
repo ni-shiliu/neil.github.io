@@ -7,138 +7,256 @@ author: Neil
 ---
 # 工厂模式（Factory）
 
-> **曾经我以为男子汉应该用继承处理一切，直到领略到运行时扩展的风采，它远比编译时期继承的威力更大。**  
+> **世界上唯一不变的就是变化！找出变化的方面，把它们分离出来。**   
 
 ## 场景
-作为咖啡馆都负责人，需要设计一套结账体系，内容要求：  
-1. 咖啡馆里面有很多种咖啡，每种咖啡都价格不同
-2. 每种咖啡可以添加不同种类都配料，配料也可以重复添加
-3. 以后新增咖啡或者配料时，要求扩展性好
+你拥有一家比萨店，内容要求
+1. 提供很多种类不同的披萨
+2. 以后新增新品或删除旧品，要求扩展性好
 
+## 简单工厂
 
-## 实现
+### 类图
 
-### 尝试设计
+![类图](../../img/factory/simple_diagram.png)
 
-![第一版设计](../../img/decorator/first_design.png)
+### 实现
 
-程序员不为难程序！这样设计，不仅给自己，同时也给接手它的同行制造了一个维护噩梦。那该怎么设计呢？**只要思想不滑坡，办法总比困难多**。
+#### Pizza
 
-### 装饰者思想设计
+```java
+public interface Pizza {
+    void prepare();
+    void bake();
+    void cut();
+    void box();
+}
+```
 
-![mode](../../img/decorator/mode.png)
+#### CheesePizza（芝士披萨）
 
-#### 特点
-- 装饰者和被装饰者有相同的超类型
-- 可以用n个装饰者包装一个对象
-- 装饰者可以在所委托被装饰者的行为之前或之后，加上自己的行为
-- 对象可以在运行时动态的被装饰
+```java
+public class CheesePizza implements Pizza {
 
+  @Override
+  public void prepare() {
+    System.out.println("Preparing CheesePizza...");
+  }
 
-#### 思想是进步的基石
+  @Override
+  public void bake() {
+    System.out.println("bake CheesePizza...");
+  }
 
-> **开放-关闭原则**：类应该对扩展开放，对修改关闭
-{: .prompt-info }
+  @Override
+  public void cut() {
+    System.out.println("cut CheesePizza...");
+  }
+
+  @Override
+  public void box() {
+    System.out.println("box CheesePizza...");
+  }
+
+  @Override
+  public String getName() {
+    return "CheesePizza";
+  }
+}
+```
+
+#### PizzaStore（披萨店）
+
+```java
+public class PizzaStore {
+
+  SimplePizzaFactory factory;
+
+  public PizzaStore(SimplePizzaFactory factory) {
+    this.factory = factory;
+  }
+
+  public Pizza orderPizza(String type) {
+    Pizza pizza = factory.createPizza(type);
+
+    pizza.prepare();
+    pizza.bake();
+    pizza.cut();
+    pizza.box();
+    return pizza;
+  }
+}
+```
+
+#### SimplePizzaFactory（工厂）
+
+```java
+public class SimplePizzaFactory {
+
+  public Pizza createPizza(String type) {
+    Pizza pizza = null;
+
+    if ("cheese".equals(type)) {
+      pizza = new CheesePizza();
+    } else if ("pepperoni".equals(type)) {
+      pizza = new PepperoniPizza();
+    }
+    return pizza;
+  }
+}
+```
+
+#### Customer（客户）
+
+```java
+public class Customer {
+
+  public static void main(String[] args) {
+    PizzaStore pizzaStore = new PizzaStore(new SimplePizzaFactory());
+    Pizza pizza = pizzaStore.orderPizza("cheese");
+    System.out.println("Neil 点了一份" + pizza.getName());
+  }
+}
+```
+> 需要自行补充其他种类的Pizza
+
+> 简单工厂其实不是设计模式中的一种，反而比较像一种编程习惯。但由于经常被使用，所以给它一个"Head First Pattern荣誉奖"。
+{: .prompt-tip }
+
+## 场景二
+
+你的披萨店经营成功，击败了竞争者，现在大家都希望能够加盟你的披萨店。身为boss，你希望能够确保披萨品质，加盟店要按照你的规则同时又要保持一定的弹性来加盟者进行自己都改良。
+
+### 初步尝试
+
+采用简单工厂的思想：每个加盟店新建自己的工厂`ShanghaiFactory`、`NanjingFactory`，制作披萨的代码绑在`PizzaStore`，但这样做没有弹性。
+
+### 工厂方法
 
 #### 类图
 
-![类图](../../img/decorator/diagram.png)
+![method_factory_diagram](../../img/factory/method_diagram.png)
 
-#### Beverage（饮料-超类）
+#### 定义
+
+**工厂方法模式**定义了一个创建对象的接口，但由子类决定要实例化的是哪个类。
+
+#### PizzaStore（工厂超类）
 
 ```java
-public abstract class Beverage {
+public abstract class PizzaStore {
 
-    String desc = "Unknown Beverage";
+    public Pizza orderPizza(String type) {
+        Pizza pizza = createPizza(type);
 
-    public String getDesc() {
-        return desc;
+        pizza.prepare();
+        pizza.bake();
+        pizza.cut();
+        pizza.box();
+
+        return pizza;
     }
 
-    public abstract double cost();
+    abstract Pizza createPizza(String type);
 }
 ```
 
-#### Espresso（浓缩咖啡-被装饰者）
+#### NYPizzaStore（子类工厂）
 
 ```java
-public class Espresso extends Beverage {
-
-  public Espresso() {
-    desc = "浓缩咖啡（Espresso）";
-  }
-
-  @Override
-  public double cost() {
-    return 1.99;
-  }
+public class NYPizzaStore extends PizzaStore {
+    @Override
+    Pizza createPizza(String type) {
+        Pizza pizza = null;
+        if ("cheese".equals(type)) {
+            pizza = new NYCheesePizza();
+        } else if ("pepperoni".equals(type)) {
+            pizza = new NYPepperoniPizza();
+        }
+        return pizza;
+    }
 }
 ```
 
-#### CondimentDecorator（配料-装饰者抽象类）
+#### Pizza（产品类-超类）
 
 ```java
-public abstract class CondimentDecorator extends Beverage {
+public abstract class Pizza {
+    String name;
+    String dough;
+    String sauce;
+    List<String> toppings = new ArrayList<>();
 
-  public abstract String getDesc();
+    void prepare() {
+        System.out.println("Preparing " + name + ", " + dough + ", " + sauce + ", " + String.join(",", toppings));
+    }
+
+    void bake() {
+        System.out.println("Bake for 25 minutes at 350");
+    }
+
+    void cut() {
+        System.out.println("Cutting the pizza");
+    }
+
+    void box() {
+        System.out.println("Boxing the pizza");
+    }
+
+    String getName() {
+        return name;
+    }
 }
 ```
 
-#### Whip（配料-奶泡-装饰者）
+#### NYCheesePizza（具体产品）
 
 ```java
-public class Whip extends CondimentDecorator {
-
-  private Beverage beverage;
-
-  public Whip(Beverage beverage) {
-    this.beverage = beverage;
-  }
-
-  @Override
-  public double cost() {
-    return beverage.cost() + 0.1;
-  }
-
-  @Override
-  public String getDesc() {
-    return beverage.getDesc() + ", Whip";
-  }
+public class NYCheesePizza extends Pizza {
+    public NYCheesePizza() {
+        name = "NY Cheese Pizza";
+        dough = "NY Cheese Thin Crust Dough";
+        sauce = "NY Cheese Marinara Sauce";
+        toppings.add("NY Cheese Crated Reggi Cheese");
+    }
 }
 ```
 
-#### CoffeeShop（启动类）
-
-> 需要自行补充`HouseBlend（被装饰者）`、`Mocha（装饰者）`、`Soy（装饰者）`
+#### NYPepperoniPizza（具体产品）
 
 ```java
-public class CoffeeShop {
-
-  public static void main(String[] args) {
-    Beverage beverage = new Espresso();
-    System.out.println("点一杯:" + beverage.getDesc() + ";价格：" + beverage.cost());
-
-    beverage = new Mocha(beverage);
-    beverage = new Mocha(beverage);
-    beverage = new Soy(beverage);
-    System.out.println("最终：" + beverage.getDesc() + ";价格:" + beverage.cost());
-
-    Beverage beverage2 = new HouseBlend();
-    System.out.println("再点一杯:" + beverage.getDesc() + ";价格：" + beverage.cost());
-
-    beverage2 = new Whip(beverage2);
-    beverage2 = new Mocha(beverage2);
-    beverage2 = new Soy(beverage2);
-    System.out.println("最终：" + beverage2.getDesc() + ";价格:" + beverage2.cost());
-  }
+public class NYPepperoniPizza extends Pizza {
+    public NYPepperoniPizza() {
+        name = "NY Pepperoni Pizza";
+        dough = "NY Pepperoni Thin Crust Dough";
+        sauce = "NY Pepperoni Marinara Sauce";
+        toppings.add("NY Pepperoni Crated Reggi Cheese");
+    }
 }
 ```
 
-> 思想精华：
-> 1. **继承**：装饰者与被装饰者继承同一个超类：达到**类型匹配**，而不是利用继承获得**行为**
-> 2. **组合**：装饰者之间的不同组合，获得不同**行为**
-> 3. 依赖**继承**，行为只能来自超类或者子类覆盖后的版本，利用**组合**，可以混合并且可以在运行时获得行为
-{: .prompt-info }
+#### Customer（启动类）
+
+```java
+public class Customer {
+
+    public static void main(String[] args) {
+        PizzaStore nyPizzaStore = new NYPizzaStore();
+        Pizza cheese = nyPizzaStore.orderPizza("cheese");
+        System.out.println("Neil ordered a " + cheese.getName());
+
+        System.out.println("=========");
+
+        PizzaStore chicagoPizzaStore = new ChicagoPizzaStore();
+        Pizza pepperoni = chicagoPizzaStore.orderPizza("pepperoni");
+        System.out.println("ShiLiu ordered a " + pepperoni.getName());
+    }
+}
+```
+> 需要自行补充其他种类的Pizza和Store
+
+
+
 
 
 > 代码下载地址：<https://github.com/ni-shiliu/neil-design-mode> 
