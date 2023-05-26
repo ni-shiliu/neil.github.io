@@ -5,7 +5,6 @@ categories: [目录, 设计模式]
 tags: [TAG]     # TAG names should always be lowercase
 author: Neil
 ---
-# 装饰者模式（Decorator）
 
 > **曾经我以为男子汉应该用继承处理一切，直到领略到运行时扩展的风采，它远比编译时期继承的威力更大。**  
 

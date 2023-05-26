@@ -5,7 +5,6 @@ categories: [目录, 设计模式]
 tags: [TAG]     # TAG names should always be lowercase
 author: Neil
 ---
-# 观察者模式（Observer）
 
 > **出版者 + 订阅者 = 观察者模式**  
 
