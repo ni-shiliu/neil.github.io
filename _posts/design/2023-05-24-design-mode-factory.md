@@ -265,17 +265,150 @@ public class Customer {
 2. 多个Factory的子类创建多个产品，如果需要新增产品，只需新增Factory子类，不用改现有代码，符合开闭原则
 3. **如果需要创建产品族类的产品，不够具有扩展性**（引出抽象工厂）
 
-> 产品族：位于不同产品等级结构中，功能相关联的产品组成的家族  
-> 例如：NYPizzaStore店铺不仅生产pizza，还生产饮料，面包，那么pizza、饮料、面包就处于同一个产品族
-
 > 设计原则：要依赖抽象，不要依赖具体类
 {: .prompt-tip }
 
 ## 场景三
 
+你的披萨店推广的很成功，随着客户的需求变多，你将提供更多食品类型：饮料和面包。
 
+> 产品族：位于不同产品等级结构中，功能相关联的产品组成的家族  
+> 例如：NYPizzaStore店铺不仅生产pizza，还生产饮料，面包，那么pizza、饮料、面包就处于同一个产品族
 
+### 初步设计
 
+如果沿用工厂方法的思路，我们需要创建`NYBreadFactory`、`NYBeveragesFactory`、`ChicagoBreadFactory`、`ChicagoBeveragesFactory`。如果需要提供的种类越多、加盟店越多，我们将陷入维护代码的深渊。
+
+### 定义
+
+为创建一组相关或相互依赖的对象提供一个接口，而且无需指定他们的具体类
+
+### 类图
+
+![method_factory_diagram](../../img/factory/abstract_factory.png)
+
+### 实现
+
+#### StoreFactory（抽象工厂）
+
+```java
+public abstract class StoreFactory {
+
+    protected abstract Pizza createPizza(String name);
+    protected abstract Bread createBread(String name);
+    protected abstract Beverages createBeverages(String name);
+
+    public void order(String pizzaName, String breadName, String beveragesName) {
+        Pizza pizza = createPizza(pizzaName);
+        System.out.println("点了一份：" + pizza.getName());
+        Bread bread = createBread(breadName);
+        System.out.println("点了一份：" + bread.getName());
+        Beverages beverages = createBeverages(beveragesName);
+        System.out.println("点了一份：" + beverages.getName());
+    }
+}
+```
+
+#### Pizza、Bread、Beverages（产品族）
+
+```java
+public abstract class Pizza {
+    String name;
+    public Pizza(String name) {
+        this.name = name;
+    }
+    public String getName() {
+        return name;
+    }
+}
+
+public abstract class Bread {
+  String name;
+  public Bread(String name) {
+    this.name = name;
+  }
+  public String getName() {
+    return name;
+  }
+}
+
+public abstract class Beverages {
+  String name;
+  public Beverages(String name) {
+    this.name = name;
+  }
+  public String getName() {
+    return name;
+  }
+}
+```
+
+#### NYStoreFactory（NY工厂）
+
+```java
+public class NYStoreFactory extends StoreFactory {
+
+    @Override
+    protected Pizza createPizza(String name) {
+        return new NYPizza(name);
+    }
+
+    @Override
+    protected Bread createBread(String name) {
+        return new NYBread(name);
+    }
+
+    @Override
+    protected Beverages createBeverages(String name) {
+        return new NYBeverages(name);
+    }
+}
+
+public class NYPizza extends Pizza {
+  public NYPizza(String name) {
+    super(name);
+  }
+}
+
+public class NYBread extends Bread {
+  public NYBread(String name) {
+    super(name);
+  }
+}
+
+public class NYBeverages extends Beverages {
+  public NYBeverages(String name) {
+    super(name);
+  }
+}
+```
+
+#### Customer（客户）
+
+```java
+public class Customer {
+    public static void main(String[] args) {
+        StoreFactory nyStoreFactory = new NYStoreFactory();
+        nyStoreFactory.order("NY 新奥尔良披萨", "NY 鸡腿面包", "NY 快乐水");
+    }
+}
+```
+
+> 需要自行补充其他加盟的工厂
+   
+### 特点
+
+1. 让调用者与对象创建的过程解耦，提高系统维护性
+2. 每个子类Factory可以创建一个产品族，减少代码的复杂性
+
+> 抽象工厂内部由多个工厂方法组成
+{: .prompt-tip }
+
+## 总结
+
+- **简单工厂**：只有唯一工厂（简单工厂），一个产品接口/抽象类，根据简单工厂中的方法来创建具体产品对象。适用于产品较少，几乎不扩展的情景
+- **工厂方法**：有多个工厂（抽象工厂+多个具体工厂），一个产品接口/抽象类，根据继承抽象工厂中的方法来多态创建具体产品对象。适用于一个类型的多个产品
+- **抽象方法**：有多个工厂（抽象工厂+多个具体工厂），多个产品接口/抽象类，对产品子类进行分组，根据继承抽象工厂中的方法多态创建同组的不同具体产品对象。适用于多个类型的多个产品
 
 > 代码下载地址：<https://github.com/ni-shiliu/neil-design-mode> 
 {: .prompt-info }  
