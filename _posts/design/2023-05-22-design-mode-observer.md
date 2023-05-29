@@ -317,6 +317,6 @@ public class Observable {
 > 代码下载地址：<https://github.com/ni-shiliu/neil-design-mode> 
 {: .prompt-tip }  
 
-> 参考文献：《Head First 设计模式》
+> 参考：《Head First 设计模式》
 
 

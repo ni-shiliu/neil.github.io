@@ -143,6 +143,6 @@ public class CoffeeShop {
 > 代码下载地址：<https://github.com/ni-shiliu/neil-design-mode> 
 {: .prompt-info }  
 
-> 参考文献：《Head First 设计模式》
+> 参考：《Head First 设计模式》
 
 
