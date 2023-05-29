@@ -1,5 +1,5 @@
 ---
-title: 单例模式（Factory）
+title: 单例模式（Singleton）
 date: 2023-05-27 18:08:08 +/-TTTT
 categories: [目录, 设计模式]
 tags: [TAG]     # TAG names should always be lowercase
