@@ -1,5 +1,5 @@
 ---
-title: 工厂模式（Factory）
+title: 创建型模式 - 工厂模式（Factory）
 date: 2023-05-24 18:08:08 +/-TTTT
 categories: [目录, 设计模式]
 tags: [TAG]     # TAG names should always be lowercase

@@ -1,5 +1,5 @@
 ---
-title: 单例模式（Singleton）
+title: 创建型模式 - 单例模式（Singleton）
 date: 2023-05-27 18:08:08 +/-TTTT
 categories: [目录, 设计模式]
 tags: [TAG]     # TAG names should always be lowercase
@@ -111,27 +111,53 @@ public class StaticInnerSingleton {
    - 使用new关键字实例化对象的时候
    - 读取或设置一个类型的静态字段（被final修饰、已在编译期把结果放入常量池的静态字段除外）的时候
    - 调用一个类型的静态方法的时候
-2. 使用java.lang.reflect包的方法对类型进行反射调用的时候，如果类型没有进行过初始化，则需要先触发其初始化
+2. 使用`java.lang.reflect`包的方法对类型进行反射调用的时候，如果类型没有进行过初始化，则需要先触发其初始化
 3. 当初始化类的时候，如果发现其父类还没有进行过初始化，则需要先触发其父类的初始化
 4. 当虚拟机启动时，用户需要指定一个要执行的主类（包含main()方法的那个类），虚拟机会先初始化这个主类
-5. 当使用JDK 7新加入的动态语言支持时，如果一个java.lang.invoke.MethodHandle实例最后的解析结果为REF_getStatic、REF_putStatic、REF_invokeStatic、REF_newInvokeSpecial四种类型的方法句柄，并且这个方法句柄对应的类没有进行过初始化，则需要先触发其初始化
-6. 当一个接口中定义了JDK 8新加入的默认方法（被default关键字修饰的接口方法）时，如果有这个接口的实现类发生了初始化，那该接口要在其之前被初始化
+5. 当使用JDK 7新加入的动态语言支持时，如果一个`java.lang.invoke.MethodHandle`实例最后的解析结果为`REF_getStatic`、`REF_putStatic`、`REF_invokeStatic`、`REF_newInvokeSpecial`四种类型的方法句柄，并且这个方法句柄对应的类没有进行过初始化，则需要先触发其初始化
+6. 当一个接口中定义了JDK8新加入的默认方法（被default关键字修饰的接口方法）时，如果有这个接口的实现类发生了初始化，那该接口要在其之前被初始化
 
-当getInstance()方法被调用时，InnerClass 才在 Singleton 的运行时常量池里，把符号引用替换为直接引用，这时静态对象 INSTANCE 也真正被创建，然后再被 getInstance()方法返回出去，这点同饿汉模式。 
+当`getInstance()`方法被调用时，`InnerClass`才在`StaticInnerSingleton`的运行时常量池里，把符号引用替换为直接引用，这时静态对象`INSTANCE`也真正被创建，然后再被`getInstance()`方法返回出去，这点同饿汉模式。 
 
 **静态内部类是如何保证线程安全的？**
 
 Java虚拟机必须保证一个类的<clinit>()方法在多线程环境中被正确地加锁同步，如果多个线程同时去初始化一个类，那么只会有其中一个线程去执行这个类的<clinit>()方法，其他线程都需要阻塞等待，直到活动线程执行完毕<clinit>()方法。如果在一个类的<clinit>()方法中有耗时很长的操作，那就可能造成多个进程阻塞，在实际应用中这种阻塞往往是很隐蔽的。
 
-
-
-
 ### 枚举（Enum）
 
 ```java
+public enum EnumSingleton {
+    INSTANCE;
 
+    public void exec() {
+        System.out.println("exec...");
+    }
+}
 ```
 
+> 优点：简单，高效，线程安全，可以避免通过反射破坏枚举单例
+
+先编译再反编译`EnumSingleton`类：
+
+```shell
+javac EnumSingleton.java 
+javap EnumSingleton 
+```
+
+结果：
+```
+Compiled from "EnumSingleton.java"
+public final class com.neil.parent.EnumSingleton extends java.lang.Enum<com.neil.parent.EnumSingleton> {
+  public static final com.neil.parent.EnumSingleton INSTANCE;
+  public static com.neil.parent.EnumSingleton[] values();
+  public static com.neil.parent.EnumSingleton valueOf(java.lang.String);
+  public void exec();
+  static {};
+}
+```
+从枚举的反编译结果可以看到:
+1. `INSTANCE`被`static final`修饰，所以可以通过类名直接调用
+2. 创建对象的实例是在静态代码块中创建的，因为`static`类型的属性会在类被加载之后被初始化，当一个Java类第一次被真正使用到的时候静态资源被初始化、Java类的加载和初始化过程都是线程安全的，所以创建一个enum类型是线程安全的。
 
 > 代码下载地址：<https://github.com/ni-shiliu/neil-design-mode> 
 {: .prompt-info }  
