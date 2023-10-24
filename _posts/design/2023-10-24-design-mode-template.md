@@ -145,8 +145,7 @@ public class BeverageTestDrive {
   + 通过子类抑制默认步骤实现可能会导致违反里氏替换原则
   + 模板方法中的步骤越多，其维护工作就可能会越困难
 
-
-
+  
 
 > 代码下载地址：<https://github.com/ni-shiliu/neil-design-mode> 
 {: .prompt-info }  
