@@ -32,7 +32,7 @@ author: Neil
 
 ## 类图
 
-![类图](../../img/command/diagram.png)
+![类图](../../img/template/diagram.png)
 
 > User（顾客）：客户负责创建一个Command命令，并设置接收者  
 > RemoteControl（服务员）：触发者（Invoker）持有一个对象命令，并在某个时间点调用命令对象对execute()方法，将请求付诸行动  
