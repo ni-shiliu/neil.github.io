@@ -34,11 +34,6 @@ author: Neil
 
 ![类图](../../img/template/diagram.png)
 
-> User（顾客）：客户负责创建一个Command命令，并设置接收者  
-> RemoteControl（服务员）：触发者（Invoker）持有一个对象命令，并在某个时间点调用命令对象对execute()方法，将请求付诸行动  
-> Command（LightOnCommand ...）（订单请求命令）：命令对象，将动作和接收者包装在一起，调用命令对象对execute()方法，就可以让接收者进行相关动作  
-> Light（XiaoMiLight）（厨师）：接收者，实行这个请求。
-
 ## 实现 
 
 ### CaffeineBeverageWithHook（咖啡因饮料with钩子）
