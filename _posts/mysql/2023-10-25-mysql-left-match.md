@@ -98,8 +98,3 @@ mysql的组合索引结构如下图：
 ## 结论
 mysql联合索引的最左匹配原则：在遇到范围查询（如 >、<）的时候，就会停止匹配，也就是范围查询的字段可以用到联合索引，但在范围查询字段后面的字段都无法用到联合索引。 >=、<=、BETWEEN、like 前缀匹配的范围查询，并不会停止匹配。
 
-
-> 代码下载地址：<https://github.com/ni-shiliu/neil-design-mode> 
-{: .prompt-info }  
-
-> 参考：《Head First 设计模式》
