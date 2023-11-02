@@ -31,7 +31,7 @@ author: Neil
 ### MapRouteContent（策略上下文）
 
 ```java
-public class MapRouteContent {
+public class MapRouteContext {
 
   private List<RouteStrategy> routeStrategyList;
 
@@ -96,17 +96,17 @@ public class TransportRouteStrategy implements RouteStrategy {
 public class Client {
 
   public static void main(String[] args) {
-    MapRouteContent mapRouteContent = new MapRouteContent();
+    MapRouteContext mapRouteContext = new MapRouteContext();
 
     BikeRouteStrategy bikeRouteStrategy = new BikeRouteStrategy();
     CarRouteStrategy carRouteStrategy = new CarRouteStrategy();
     TransportRouteStrategy transportRouteStrategy = new TransportRouteStrategy();
 
-    mapRouteContent.addStrategy(bikeRouteStrategy);
-    mapRouteContent.addStrategy(carRouteStrategy);
-    mapRouteContent.addStrategy(transportRouteStrategy);
+    mapRouteContext.addStrategy(bikeRouteStrategy);
+    mapRouteContext.addStrategy(carRouteStrategy);
+    mapRouteContext.addStrategy(transportRouteStrategy);
 
-    mapRouteContent.buildRoute();
+    mapRouteContext.buildRoute();
   }
 }
 ```
