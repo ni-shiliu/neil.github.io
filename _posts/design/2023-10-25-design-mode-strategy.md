@@ -24,7 +24,7 @@ author: Neil
 
 ## 类图
 
-![类图](../../img/strategy/diagram.png)
+![类图](../../img/strategy/diagram2.png)
 
 ## 实现 
 
