@@ -1,5 +1,5 @@
 ---
-title: OAuth2.0协议-概念篇
+title: OAuth2.0协议-基础篇
 date: 2023-11-02 08:08:08 +/-TTTT
 categories: [oAuth协议, oAuth2.0]
 tags: [TAG]     # TAG names should always be lowercase
